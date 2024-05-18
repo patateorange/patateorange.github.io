@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>YouTube Downloader</title>
+    <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+          <body>
+            <h1 class="heading">Downloader</h1>
+            <div class="inputs">
+              <input
+                spellcheck="false"
+                class="URL-input"
+                value="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                placeholder="URL of the video"
+              /><button class="convert-button">
+                <span class="iconify" data-icon="fa-solid:download"></span>
+      </button>
+    </div>
+    <div class="inputs">
+      <label for="format">Format:</label>
+      <select style="width: 70px !important;" name="format" id="format">
+        <optgroup label="Video">
+          <option>mp4</option>
+          <option>mov</option>
+          <option>avi</option>
+          <option>webm</option>
+          <option>mkv</option>
+          <option>flv</option>
+        </optgroup>
+        <optgroup label="Audio">
+          <option>mp3</option>
+          <option>wav</option>
+          <option>wmv</option>
+          <option>ogg</option>
+          <option>aiff</option>
+        </optgroup>
+      </select>
+      <label for="quality">Quality</label>
+
+      <select style="width: 70px !important;" id="quality">
+        <optgroup label="Audio and video">
+          <option>Highest quality</option>
+          <option>Lowest quality</option>
+        </optgroup>
+        <optgroup label="Audio only">
+          <option>Highest audio quality</option>
+          <option>Lowest audio quality</option>
+        </optgroup>
+        <optgroup label="Video only">
+          <option>Highest video quality</option>
+          <option>Lowest video quality</option>
+        </optgroup>
+      </select>
+    </div>
+<table>
+<tr> 
+<td>Formats</td> 
+<td id="formats_list"></td> 
+</tr> 
+<tr> 
+<td>Limitations</td> 
+<td> Videos have to be avalible publicly. They also have to be free on YouTube </td>
+</tr> 
+</table>
+        </body>
+</html>
+<script>
+  document.getElementById("formats_list").innerText = formats();
+  function formats() {
+    var output = "";
+    document
+      .getElementById("format")
+      .querySelectorAll("option")
+      .forEach((option) => {
+        output += `, .${option.innerText}`;
+      });
+    return output;
+  }
+  setInterval(() => {
+    if (
+      /https:\/\/(www|)\.youtube\.com\/watch\?v=[A-Za-z0-9]+/i.test(
+        document.querySelector("input").value
+      )
+    ) {
+      document.querySelector("button").disabled = false;
+    } else {
+      document.querySelector("button").disabled = true;
+    }
+  }, 10);
+  var convertBtn = document.querySelector(".convert-button");
+  var URLinput = document.querySelector(".URL-input");
+  convertBtn.addEventListener("click", () => {
+    sendURL(URLinput.value);
+  });
+  function sendURL(URL) {
+    var sel = document.getElementById("format");
+    var qualsel = document.getElementById("quality");
+    window.location.href = `/download?URL=${URL}&format=${
+      sel.options[sel.selectedIndex].text
+    }&quality=${qualsel.options[qualsel.selectedIndex].text
+      .toLowerCase()
+      .replace(/ /g, "")
+      .replace(/quality/, "")}`;
+  }
+</script>
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Nunito&display=swap");
+  select {
+    padding: 3px;
+    border: 1px solid #9600ff;
+    background: #270142;
+    color: #d69cff;
+    border-radius: 10px;
+    width: 80px;
+  }
+  optgroup {
+    background: #270142;
+    color: #d69cff;
+  }
+  option {
+    background: #270142;
+    color: #d69cff;
+  }
+
+  * {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Nunito", sans-serif;
+    transform: scale(1.03);
+  }
+  *:focus {
+    outline: none;
+  }
+  body {
+    overflow: hidden;
+    background: #270142;
+    color: #d69cff;
+    text-shadow: 0 0 10px #9600ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    flex-direction: column;
+  }
+  input {
+    transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.675),
+      box-shadow 0.4s ease;
+    background: #270142;
+    color: #d69cff;
+    padding: 10px;
+    border-radius: 10px;
+    width: 300px;
+    border: 1px solid #9600ff;
+  }
+  input:focus {
+    outline: #f7ebff;
+    box-shadow: 0 0 0 4px #f7ebff;
+    width: 350px;
+  }
+  button {
+    cursor: pointer;
+    margin-left: 10px;
+    transition: color 0.4s ease, background-color 0.4s ease,
+      borde-color 0.4s ease, box-shadow 0.4s ease;
+    background: #d69cff;
+    font-weight: 800;
+    border: 1px solid #101010;
+    color: #101010;
+    border-radius: 10px;
+    padding: 10px;
+  }
+  button:hover:not(button:disabled) {
+    color: #d69cff;
+    background: #9600ff;
+    border-color: #d69cff;
+    box-shadow: 0 0 0 2px #d69cff;
+  }
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  button:active {
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.548);
+    outline: none;
+  }
+  #format {
+    width: 60px;
+  }
+  ::selection {
+    background: rgba(255, 68, 0, 0.418);
+    color: rgb(231, 173, 152);
+  }
+  table {
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  td {
+    padding: 10px;
+    border: 1px #de94ff;
+    width: 150px;
+    height: fit-content;
+    font-size: 10px;
+  }
+  .inputs {
+    margin-top: 10px;
+  }
+  label {
+    font-size: 16px;
+  }
+  ::-webkit-scrollbar {
+    width: 0;
+  }
+</style>
